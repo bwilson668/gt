@@ -15,8 +15,14 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Setup
 
-```{r, results='hide'}
+The packages included to run this notebook are:
+
+- tidyverse
+- forecast
+
+```{r setup2, include=FALSE}
 library(tidyverse)
+library(forecast)
 ```
 
 ## 7.1 
@@ -38,12 +44,57 @@ We also work in a ternd component. Q4 is a slow down overall for business as peo
 **Using the 20 years of daily high temperature data for Atlanta, build and use an exponential smoothing model to help make a judgment of whether the unofficial end of summer has gotten later over the 20 years.**  
 *(Part of the point of this assignment is for you to think about how you might use exponential smoothing to answer this question. Feel free to combine it with other models if you’d like to. There’s certainly more than one reasonable approach.)*
 
+First let's format the data and plot out the data.  
+Since we know we are using an exponential smoothing model, we can train that model quickly too.
+
 ```{r}
-temps <- read.delim("data/temps.txt") %>% 
-  gather(key = "year", value = "temp", 2:21) %>%
-  mutate(id = row_number())
+temps <- read.delim("data/temps.txt")
+  
+temps_ts <- temps %>% 
+  gather(key = "year", value = "temp", 2:21) %>% 
+  select( temp ) %>% 
+  as.ts()
+
+# By default this Arima function uses the Box-Cox transformation to set a lambda.
+# I set it manually for completness of the assignment and, 
+# I set it towards 1 because yesterday's high is typically close to today's high.
+temps_exp <- Arima(temps_ts, order = c(0, 1, 1), lambda = 0.7)
+
+# Not the prettiest plot, but we can see a bit of red poking through. 
+# The red is actuals and blue is the fitted exponential smoothing model.
+plot(temps_exp$x, col = "red")
+lines(temps_exp$fitted, col = "blue")
 ```
 
+Not the prettiest plot, but we can see a bit of red poking through. So we know the exponential smoothing is working.
+
+It is a bit hard to determine any trends from looking at the full data set all in one timeline though. Let's break it down into each year.
+
+```{r}
+plot_yearly_exponential_smoothing <- function(year, transparency) {
+  year_exp <- year %>%
+    as.ts() %>% 
+    Arima(order = c(0, 1, 1), lambda = 0.7)
+  
+  if (transparency == 100) {
+    transparency = ""
+  }
+  
+  print(paste0("#000000", transparency))
+  
+  return(lines(year_exp$fitted, col=paste0("#000000", transparency)))
+}
+plot(0, 0, xlim=c(1,123), ylim=c(40, 110), type="n", las=1, xlab = "day", ylab = "temp", bty="n", main = "ATL Summer Temps from 1996 to 2015")
+
+for (i in 2:length(temps)) {
+  transparency = 10 * as.integer(i/2)
+  plot_yearly_exponential_smoothing(temps[i], transparency)
+}
+```
+
+In this plot we increase the opacity as we get more recent data. 
+
+If we compare the different years, it looks as if the downward trends towards Fall starts around the same time, but more recent years have been sligthly warmer than they used to be.
 
 ## 8.1
 
@@ -64,6 +115,10 @@ I am currently house shopping and look at a lot of "Zestimates". I believe linea
 *Please refrence the HW file for sample predictor data*
 
 **Show your model (factors used and their coefficients), the software output, and the quality of fit.**
+
+```{r}
+uscrime <- read.delim("data/uscrime.txt")
+```
 
 
 ---
