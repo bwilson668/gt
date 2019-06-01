@@ -1,0 +1,83 @@
+---
+title: "hw_week3"
+author: "Ben Wilson"
+date: "May 31, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Week 3 Homework
+
+*Time-Series and Basic Regression*
+
+## Setup
+
+```{r, results='hide'}
+library(tidyverse)
+```
+
+## 7.1 
+
+**Describe a situation or problem from your job, everyday life, current events, etc., for which exponential smoothing would be appropriate. What data would you need? Would you expect the value of α (the first smoothing parameter) to be closer to 0 or 1, and why?**
+
+I work in a SaaS company and we stay alive by making sure our customers are deriving value from the product. A good way to know if they are getting value is looking at the usage data of our customers Even something as simple as did a user login today is a good indicator of if the customer is getting value. So, how many active users of their licensed users logged into our product on a given day is a valuable metric for the company. If we notice their active user usage dropping off, we can reach out to see if the product is no longer meeting their needs, and if not, why!?
+
+Setting alpha closer to 0 means the system has a lot of randomness, so you only want to rely more on the historic data.  
+Conversly, setting alpha closer to 1 means the system is pretty stable, so you can act on the latest information.
+
+Monitoring a login for a particular user is very reliable, so the alpha would be set closer to 1. We can trust the latest data.  
+However, we definitely need a cyclical component to the time series model. We make business software, so there is a big drop off in usage on the weekends. SHOCKER!!  
+We also work in a ternd component. Q4 is a slow down overall for business as people travel to spend time with their famalies and enjoy the holidays.
+
+
+## 7.2
+
+**Using the 20 years of daily high temperature data for Atlanta, build and use an exponential smoothing model to help make a judgment of whether the unofficial end of summer has gotten later over the 20 years.**  
+*(Part of the point of this assignment is for you to think about how you might use exponential smoothing to answer this question. Feel free to combine it with other models if you’d like to. There’s certainly more than one reasonable approach.)*
+
+```{r}
+temps <- read.delim("data/temps.txt") %>% 
+  gather(key = "year", value = "temp", 2:21) %>%
+  mutate(id = row_number())
+```
+
+
+## 8.1
+
+**Describe a situation or problem from your job, everyday life, current events, etc., for which a linear regression model would be appropriate. List some (up to 5) predictors that you might use.**
+
+I am currently house shopping and look at a lot of "Zestimates". I believe linear regression could be used to come up with a home price prediction. Useful features for the model could be:
+
+- Zip Code
+- Square Footage
+- Lot Size
+- Number of Bedrooms
+- Number of Bathrooms
+
+## 8.2
+
+**Using crime data from `uscrime.txt`, use regression (`lm` or `glm`) to predict the observed crime rate in a city with the following data:**
+
+*Please refrence the HW file for sample predictor data*
+
+**Show your model (factors used and their coefficients), the software output, and the quality of fit.**
+
+
+---
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
