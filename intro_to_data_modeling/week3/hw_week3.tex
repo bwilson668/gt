@@ -1,0 +1,613 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={hw\_week3},
+            pdfauthor={Ben Wilson},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\providecommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{hw\_week3}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{Ben Wilson}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{May 31, 2019}
+
+
+\begin{document}
+\maketitle
+
+\section{Week 3 Homework}\label{week-3-homework}
+
+\emph{Time-Series and Basic Regression}
+
+\subsection{Setup}\label{setup}
+
+The packages included to run this notebook are:
+
+\begin{itemize}
+\tightlist
+\item
+  tidyverse
+\item
+  forecast
+\end{itemize}
+
+\subsection{7.1}\label{section}
+
+\textbf{Describe a situation or problem from your job, everyday life,
+current events, etc., for which exponential smoothing would be
+appropriate. What data would you need? Would you expect the value of α
+(the first smoothing parameter) to be closer to 0 or 1, and why?}
+
+I work in a SaaS company and we stay alive by making sure our customers
+are deriving value from the product. A good way to know if they are
+getting value is looking at the usage data of our customers Even
+something as simple as did a user login today is a good indicator of if
+the customer is getting value. So, how many active users of their
+licensed users logged into our product on a given day is a valuable
+metric for the company. If we notice their active user usage dropping
+off, we can reach out to see if the product is no longer meeting their
+needs, and if not, why!?
+
+Setting alpha closer to 0 means the system has a lot of randomness, so
+you only want to rely more on the historic data.\\
+Conversly, setting alpha closer to 1 means the system is pretty stable,
+so you can act on the latest information.
+
+Monitoring a login for a particular user is very reliable, so the alpha
+would be set closer to 1. We can trust the latest data.\\
+However, we definitely need a cyclical component to the time series
+model. We make business software, so there is a big drop off in usage on
+the weekends. SHOCKER!!\\
+We also work in a ternd component. Q4 is a slow down overall for
+business as people travel to spend time with their famalies and enjoy
+the holidays.
+
+\subsection{7.2}\label{section-1}
+
+\textbf{Using the 20 years of daily high temperature data for Atlanta,
+build and use an exponential smoothing model to help make a judgment of
+whether the unofficial end of summer has gotten later over the 20
+years.}\\
+\emph{(Part of the point of this assignment is for you to think about
+how you might use exponential smoothing to answer this question. Feel
+free to combine it with other models if you'd like to. There's certainly
+more than one reasonable approach.)}
+
+First let's format the data and plot out the data.\\
+Since we know we are using an exponential smoothing model, we can train
+that model quickly too.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{temps <-}\StringTok{ }\KeywordTok{read.delim}\NormalTok{(}\StringTok{"data/temps.txt"}\NormalTok{)}
+  
+\NormalTok{temps_ts <-}\StringTok{ }\NormalTok{temps }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{gather}\NormalTok{(}\DataTypeTok{key =} \StringTok{"year"}\NormalTok{, }\DataTypeTok{value =} \StringTok{"temp"}\NormalTok{, }\DecValTok{2}\OperatorTok{:}\DecValTok{21}\NormalTok{) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{select}\NormalTok{( temp ) }\OperatorTok{%>%}\StringTok{ }
+\StringTok{  }\KeywordTok{as.ts}\NormalTok{()}
+
+\CommentTok{# By default this Arima function uses the Box-Cox transformation to set a lambda.}
+\CommentTok{# I set it manually for completness of the assignment and, }
+\CommentTok{# I set it towards 1 because yesterday's high is typically close to today's high.}
+\NormalTok{temps_exp <-}\StringTok{ }\KeywordTok{Arima}\NormalTok{(temps_ts, }\DataTypeTok{order =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{), }\DataTypeTok{lambda =} \FloatTok{0.7}\NormalTok{)}
+
+\CommentTok{# Not the prettiest plot, but we can see a bit of red poking through. }
+\CommentTok{# The red is actuals and blue is the fitted exponential smoothing model.}
+\KeywordTok{plot}\NormalTok{(temps_exp}\OperatorTok{$}\NormalTok{x, }\DataTypeTok{col =} \StringTok{"red"}\NormalTok{)}
+\KeywordTok{lines}\NormalTok{(temps_exp}\OperatorTok{$}\NormalTok{fitted, }\DataTypeTok{col =} \StringTok{"blue"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{hw_week3_files/figure-latex/unnamed-chunk-1-1.pdf}
+
+Not the prettiest plot, but we can see a bit of red poking through. So
+we know the exponential smoothing is working.
+
+It is a bit hard to determine any trends from looking at the full data
+set all in one timeline though. Let's break it down into each year.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{plot_yearly_exponential_smoothing <-}\StringTok{ }\ControlFlowTok{function}\NormalTok{(year, transparency) \{}
+\NormalTok{  year_exp <-}\StringTok{ }\NormalTok{year }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{as.ts}\NormalTok{() }\OperatorTok{%>%}\StringTok{ }
+\StringTok{    }\KeywordTok{Arima}\NormalTok{(}\DataTypeTok{order =} \KeywordTok{c}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{1}\NormalTok{, }\DecValTok{1}\NormalTok{), }\DataTypeTok{lambda =} \FloatTok{0.7}\NormalTok{)}
+  
+  \ControlFlowTok{if}\NormalTok{ (transparency }\OperatorTok{==}\StringTok{ }\DecValTok{100}\NormalTok{) \{}
+\NormalTok{    transparency =}\StringTok{ ""}
+\NormalTok{  \}}
+  
+  \KeywordTok{return}\NormalTok{(}\KeywordTok{lines}\NormalTok{(year_exp}\OperatorTok{$}\NormalTok{fitted, }\DataTypeTok{col=}\KeywordTok{paste0}\NormalTok{(}\StringTok{"#000000"}\NormalTok{, transparency)))}
+\NormalTok{\}}
+\KeywordTok{plot}\NormalTok{(}\DecValTok{0}\NormalTok{, }\DecValTok{0}\NormalTok{, }\DataTypeTok{xlim=}\KeywordTok{c}\NormalTok{(}\DecValTok{1}\NormalTok{,}\DecValTok{123}\NormalTok{), }\DataTypeTok{ylim=}\KeywordTok{c}\NormalTok{(}\DecValTok{40}\NormalTok{, }\DecValTok{110}\NormalTok{), }\DataTypeTok{type=}\StringTok{"n"}\NormalTok{, }\DataTypeTok{las=}\DecValTok{1}\NormalTok{, }\DataTypeTok{xlab =} \StringTok{"day"}\NormalTok{, }\DataTypeTok{ylab =} \StringTok{"temp"}\NormalTok{, }\DataTypeTok{bty=}\StringTok{"n"}\NormalTok{, }\DataTypeTok{main =} \StringTok{"ATL Summer Temps from 1996 to 2015"}\NormalTok{)}
+
+\ControlFlowTok{for}\NormalTok{ (i }\ControlFlowTok{in} \DecValTok{2}\OperatorTok{:}\KeywordTok{length}\NormalTok{(temps)) \{}
+\NormalTok{  transparency =}\StringTok{ }\DecValTok{10} \OperatorTok{*}\StringTok{ }\KeywordTok{as.integer}\NormalTok{(i}\OperatorTok{/}\DecValTok{2}\NormalTok{)}
+  \KeywordTok{plot_yearly_exponential_smoothing}\NormalTok{(temps[i], transparency)}
+\NormalTok{\}}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{hw_week3_files/figure-latex/unnamed-chunk-2-1.pdf}
+
+In this plot we increase the opacity as we get more recent data.
+
+If we compare the different years, it looks as if the downward trends
+towards Fall starts around the same time, but more recent years have
+been sligthly warmer than they used to be.
+
+\subsection{8.1}\label{section-2}
+
+\textbf{Describe a situation or problem from your job, everyday life,
+current events, etc., for which a linear regression model would be
+appropriate. List some (up to 5) predictors that you might use.}
+
+I am currently house shopping and look at a lot of ``Zestimates''. I
+believe linear regression could be used to come up with a home price
+prediction. Useful features for the model could be:
+
+\begin{itemize}
+\tightlist
+\item
+  Zip Code
+\item
+  Square Footage
+\item
+  Lot Size
+\item
+  Number of Bedrooms
+\item
+  Number of Bathrooms
+\end{itemize}
+
+\subsection{8.2}\label{section-3}
+
+**Using crime data from \texttt{uscrime.txt}, use regression
+(\texttt{lm} or \texttt{glm}) to predict the observed crime rate in a
+city with the following \url{data:**}
+
+\emph{Please refrence the HW file for sample predictor data}
+
+\textbf{Show your model (factors used and their coefficients), the
+software output, and the quality of fit.}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{uscrime <-}\StringTok{ }\KeywordTok{read.delim}\NormalTok{(}\StringTok{"data/uscrime.txt"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+Let's start with a simple \texttt{lm} to see what the function does for
+us.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{crime_lm1 <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(Crime }\OperatorTok{~}\StringTok{ }\NormalTok{M, }\DataTypeTok{data =}\NormalTok{ uscrime)}
+\KeywordTok{summary}\NormalTok{(crime_lm1)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = Crime ~ M, data = uscrime)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -572.93 -283.22  -50.38  153.97 1067.06 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)  
+## (Intercept)  1286.65     635.72   2.024   0.0489 *
+## M             -27.53      45.69  -0.603   0.5498  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 389.5 on 45 degrees of freedom
+## Multiple R-squared:  0.008005,   Adjusted R-squared:  -0.01404 
+## F-statistic: 0.3631 on 1 and 45 DF,  p-value: 0.5498
+\end{verbatim}
+
+The \texttt{summary()} of the linear model gives us some good
+information talked about duirng the lesson.\\
+In the coefficients table, the final column labeled
+\texttt{Pr(\textgreater{}\textbar{}t\textbar{})} is the p-score. The
+software highlights important predictors. In this model the intercept is
+the most important factor\ldots{} that's never a good sign.\\
+If we continue on to look at the R-Squared, we see that this model does
+not even explain 1\% of the variance in the model.
+
+Still, plotting the data may give us a hint at why \texttt{M} is not a
+good predictor of crime.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{plot}\NormalTok{(crime_lm1, }\DataTypeTok{las =} \DecValTok{1}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{hw_week3_files/figure-latex/unnamed-chunk-5-1.pdf}
+\includegraphics{hw_week3_files/figure-latex/unnamed-chunk-5-2.pdf}
+\includegraphics{hw_week3_files/figure-latex/unnamed-chunk-5-3.pdf}
+\includegraphics{hw_week3_files/figure-latex/unnamed-chunk-5-4.pdf}
+
+Plotting the model returns 4 different plots.
+
+The first plot is similar to a scatter plot. Here the residuals -
+\emph{the model's error} - are plotted against the prediction.
+
+The second plot is a Q-Q plot. This type of plot looks at the
+distributions of two variables. If they are distributed the same then
+all the dots will be along the diagonal dotted line.
+
+The third plot looks at the RMSE against the predictions. The closer to
+the red line, the better. So we have further evidence of this not being
+a great model.
+
+The last plot is a leverage plot. I am still learning to inerpret this
+one. My general understanding is if a plotted residual is beyond the 0.5
+and 1 thresholds is that these points are likely outliers that are
+having a strong impact on the model. For this model we do not have any
+points that the plot highlights as outliers, but there is a wide range
+of residuals.
+
+Since this model was not good, let's look at some scatter plots of
+features to see which ones might make for a good model.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{pairs}\NormalTok{(}
+  \OperatorTok{~}\NormalTok{Crime }\OperatorTok{+}\StringTok{ }\NormalTok{M }\OperatorTok{+}\StringTok{ }\NormalTok{So }\OperatorTok{+}\StringTok{ }\NormalTok{Ed }\OperatorTok{+}\StringTok{ }\NormalTok{Po1 }\OperatorTok{+}\StringTok{ }\NormalTok{Po2, }
+  \DataTypeTok{data=}\NormalTok{uscrime, }
+  \DataTypeTok{main=}\StringTok{"US Crime Feature Set 1"}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{hw_week3_files/figure-latex/unnamed-chunk-6-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{pairs}\NormalTok{(}
+  \OperatorTok{~}\NormalTok{Crime }\OperatorTok{+}\StringTok{ }\NormalTok{LF }\OperatorTok{+}\StringTok{ }\NormalTok{M.F }\OperatorTok{+}\StringTok{ }\NormalTok{Pop }\OperatorTok{+}\StringTok{ }\NormalTok{NW }\OperatorTok{+}\StringTok{ }\NormalTok{U1, }
+  \DataTypeTok{data=}\NormalTok{uscrime, }
+  \DataTypeTok{main=}\StringTok{"US Crime Feature Set 2"}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{hw_week3_files/figure-latex/unnamed-chunk-6-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{pairs}\NormalTok{(}
+  \OperatorTok{~}\NormalTok{Crime }\OperatorTok{+}\StringTok{ }\NormalTok{U2 }\OperatorTok{+}\StringTok{ }\NormalTok{Wealth }\OperatorTok{+}\StringTok{ }\NormalTok{Ineq }\OperatorTok{+}\StringTok{ }\NormalTok{Prob }\OperatorTok{+}\StringTok{ }\NormalTok{Time, }
+  \DataTypeTok{data=}\NormalTok{uscrime, }
+  \DataTypeTok{main=}\StringTok{"US Crime Feature Set 3"}
+\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{hw_week3_files/figure-latex/unnamed-chunk-6-3.pdf}
+
+In the scatter plots we are looking for a good diagonal relationship
+between Crime and a predictor. Glancing through the plots, it looks like
+there are a few predictors worth exploring with a model.
+
+\begin{itemize}
+\tightlist
+\item
+  Po1
+\item
+  Po2
+\item
+  M.F
+\item
+  Wealth
+\end{itemize}
+
+Let's try a few combinations of these predictors to see how much we can
+improve the model.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# All candidate features}
+\NormalTok{crime_lm2 <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(Crime }\OperatorTok{~}\StringTok{ }\NormalTok{Po1 }\OperatorTok{+}\StringTok{ }\NormalTok{Po2 }\OperatorTok{+}\StringTok{ }\NormalTok{M.F }\OperatorTok{+}\StringTok{ }\NormalTok{Wealth, }\DataTypeTok{data =}\NormalTok{ uscrime)}
+\KeywordTok{summary}\NormalTok{(crime_lm2)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = Crime ~ Po1 + Po2 + M.F + Wealth, data = uscrime)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -613.51 -183.63   -0.85  149.79  578.11 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(>|t|)  
+## (Intercept) -2.440e+03  1.334e+03  -1.829   0.0744 .
+## Po1          2.233e+02  1.181e+02   1.891   0.0656 .
+## Po2         -1.078e+02  1.280e+02  -0.843   0.4042  
+## M.F          3.064e+01  1.397e+01   2.193   0.0339 *
+## Wealth      -1.331e-01  6.989e-02  -1.905   0.0637 .
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 267.5 on 42 degrees of freedom
+## Multiple R-squared:  0.5634, Adjusted R-squared:  0.5218 
+## F-statistic: 13.55 on 4 and 42 DF,  p-value: 3.554e-07
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# M.F and Wealth}
+\NormalTok{crime_lm3 <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(Crime }\OperatorTok{~}\StringTok{ }\NormalTok{M.F }\OperatorTok{+}\StringTok{ }\NormalTok{Wealth, }\DataTypeTok{data =}\NormalTok{ uscrime)}
+\KeywordTok{summary}\NormalTok{(crime_lm3)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = Crime ~ M.F + Wealth, data = uscrime)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -594.62 -267.58  -61.88  210.48  797.53 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(>|t|)   
+## (Intercept) -1.767e+03  1.726e+03  -1.024  0.31159   
+## M.F          1.826e+01  1.784e+01   1.024  0.31154   
+## Wealth       1.669e-01  5.448e-02   3.063  0.00373 **
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 350.7 on 44 degrees of freedom
+## Multiple R-squared:  0.2135, Adjusted R-squared:  0.1777 
+## F-statistic: 5.972 on 2 and 44 DF,  p-value: 0.005075
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Po1 and M.F}
+\NormalTok{crime_lm4 <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(Crime }\OperatorTok{~}\StringTok{ }\NormalTok{Po1 }\OperatorTok{+}\StringTok{ }\NormalTok{M.F, }\DataTypeTok{data =}\NormalTok{ uscrime)}
+\KeywordTok{summary}\NormalTok{(crime_lm4)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = Crime ~ Po1 + M.F, data = uscrime)
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -598.2 -186.0  -12.8  200.1  497.7 
+## 
+## Coefficients:
+##             Estimate Std. Error t value Pr(>|t|)    
+## (Intercept) -2311.68    1365.10  -1.693   0.0974 .  
+## Po1            88.65      13.75   6.446 7.45e-08 ***
+## M.F            25.06      13.87   1.807   0.0777 .  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 277 on 44 degrees of freedom
+## Multiple R-squared:  0.5092, Adjusted R-squared:  0.4869 
+## F-statistic: 22.83 on 2 and 44 DF,  p-value: 1.584e-07
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Po1 and wealth}
+\NormalTok{crime_lm5 <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(Crime }\OperatorTok{~}\StringTok{ }\NormalTok{Po1 }\OperatorTok{+}\StringTok{ }\NormalTok{Wealth, }\DataTypeTok{data =}\NormalTok{ uscrime)}
+\KeywordTok{summary}\NormalTok{(crime_lm5)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = Crime ~ Po1 + Wealth, data = uscrime)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -687.46 -140.11    3.37  141.37  553.68 
+## 
+## Coefficients:
+##              Estimate Std. Error t value Pr(>|t|)    
+## (Intercept) 469.17785  247.51328   1.896   0.0646 .  
+## Po1         116.42016   22.51731   5.170 5.48e-06 ***
+## Wealth       -0.10538    0.06935  -1.520   0.1358    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 279.9 on 44 degrees of freedom
+## Multiple R-squared:  0.4991, Adjusted R-squared:  0.4763 
+## F-statistic: 21.92 on 2 and 44 DF,  p-value: 2.482e-07
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Po1, M.F, and Wealth}
+\NormalTok{crime_lm6 <-}\StringTok{ }\KeywordTok{lm}\NormalTok{(Crime }\OperatorTok{~}\StringTok{ }\NormalTok{Po1 }\OperatorTok{+}\StringTok{ }\NormalTok{M.F }\OperatorTok{+}\StringTok{ }\NormalTok{Wealth, }\DataTypeTok{data =}\NormalTok{ uscrime)}
+\KeywordTok{summary}\NormalTok{(crime_lm6)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## lm(formula = Crime ~ Po1 + M.F + Wealth, data = uscrime)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -581.83 -169.25   17.68  158.53  563.19 
+## 
+## Coefficients:
+##               Estimate Std. Error t value Pr(>|t|)    
+## (Intercept) -2.578e+03  1.319e+03  -1.954   0.0572 .  
+## Po1          1.255e+02  2.179e+01   5.759 8.18e-07 ***
+## M.F          3.234e+01  1.378e+01   2.347   0.0236 *  
+## Wealth      -1.451e-01  6.819e-02  -2.128   0.0391 *  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 266.6 on 43 degrees of freedom
+## Multiple R-squared:  0.556,  Adjusted R-squared:  0.525 
+## F-statistic: 17.95 on 3 and 43 DF,  p-value: 1.06e-07
+\end{verbatim}
+
+Looking at the summary statistics from all the trained models, I am
+going to select model 6 as the winner. Even though it did not achieve
+the best R-Squared stat of the models, it is simpler (only 3
+predictors), and each predictor is significant.
+
+The final step of the assignment was to make a prediction based on a
+fictional city. Let's take a look!
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Data points for new city pulled from HW guidelines}
+\NormalTok{new_city <-}\StringTok{ }\KeywordTok{data.frame}\NormalTok{(}\DataTypeTok{Po1 =} \FloatTok{12.0}\NormalTok{, }\DataTypeTok{M.F =} \FloatTok{94.0}\NormalTok{, }\DataTypeTok{Wealth =} \DecValTok{3200}\NormalTok{)}
+\NormalTok{new_city_crime <-}\StringTok{ }\KeywordTok{predict}\NormalTok{(crime_lm6, new_city)}
+\KeywordTok{print}\NormalTok{(new_city_crime)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        1 
+## 1503.259
+\end{verbatim}
+
+Our hypothetical city is predicted to have 1503 crimes. This puts the
+city well into the top quartile when you compare it to the box plot of
+our crime data.
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{boxplot}\NormalTok{(uscrime}\OperatorTok{$}\NormalTok{Crime)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{hw_week3_files/figure-latex/unnamed-chunk-13-1.pdf}
+
+
+\end{document}

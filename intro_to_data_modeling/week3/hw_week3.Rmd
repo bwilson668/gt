@@ -2,7 +2,7 @@
 title: "hw_week3"
 author: "Ben Wilson"
 date: "May 31, 2019"
-output: html_document
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
@@ -80,8 +80,6 @@ plot_yearly_exponential_smoothing <- function(year, transparency) {
     transparency = ""
   }
   
-  print(paste0("#000000", transparency))
-  
   return(lines(year_exp$fitted, col=paste0("#000000", transparency)))
 }
 plot(0, 0, xlim=c(1,123), ylim=c(40, 110), type="n", las=1, xlab = "day", ylab = "temp", bty="n", main = "ATL Summer Temps from 1996 to 2015")
@@ -120,19 +118,105 @@ I am currently house shopping and look at a lot of "Zestimates". I believe linea
 uscrime <- read.delim("data/uscrime.txt")
 ```
 
+Let's start with a simple `lm` to see what the function does for us.
 
----
-
-```{r cars}
-summary(cars)
+```{r}
+crime_lm1 <- lm(Crime ~ M, data = uscrime)
+summary(crime_lm1)
 ```
 
-## Including Plots
+The `summary()` of the linear model gives us some good information talked about duirng the lesson.  
+In the coefficients table, the final column labeled `Pr(>|t|)` is the p-score. The software highlights important predictors. In this model the intercept is the most important factor... that's never a good sign.  
+If we continue on to look at the R-Squared, we see that this model does not even explain 1% of the variance in the model.
 
-You can also embed plots, for example:
+Still, plotting the data may give us a hint at why `M` is not a good predictor of crime.
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r}
+plot(crime_lm1, las = 1)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+Plotting the model returns 4 different plots.  
+
+The first plot is similar to a scatter plot. Here the residuals - *the model's error* - are plotted against the prediction. 
+
+The second plot is a Q-Q plot. This type of plot looks at the distributions of two variables. If they are distributed the same then all the dots will be along the diagonal dotted line.
+
+The third plot looks at the RMSE against the predictions. The closer to the red line, the better. So we have further evidence of this not being a great model.
+
+The last plot is a leverage plot. I am still learning to inerpret this one. My general understanding is if a plotted residual is beyond the 0.5 and 1 thresholds is that these points are likely outliers that are having a strong impact on the model. For this model we do not have any points that the plot highlights as outliers, but there is a wide range of residuals.
+
+Since this model was not good, let's look at some scatter plots of features to see which ones might make for a good model.
+
+```{r}
+pairs(
+  ~Crime + M + So + Ed + Po1 + Po2, 
+  data=uscrime, 
+  main="US Crime Feature Set 1"
+)
+pairs(
+  ~Crime + LF + M.F + Pop + NW + U1, 
+  data=uscrime, 
+  main="US Crime Feature Set 2"
+)
+pairs(
+  ~Crime + U2 + Wealth + Ineq + Prob + Time, 
+  data=uscrime, 
+  main="US Crime Feature Set 3"
+)
+```
+
+In the scatter plots we are looking for a good diagonal relationship between Crime and a predictor. Glancing through the plots, it looks like there are a few predictors worth exploring with a model.
+
+- Po1
+- Po2
+- M.F
+- Wealth
+
+Let's try a few combinations of these predictors to see how much we can improve the model.
+
+```{r}
+# All candidate features
+crime_lm2 <- lm(Crime ~ Po1 + Po2 + M.F + Wealth, data = uscrime)
+summary(crime_lm2)
+```
+
+```{r}
+# M.F and Wealth
+crime_lm3 <- lm(Crime ~ M.F + Wealth, data = uscrime)
+summary(crime_lm3)
+```
+
+```{r}
+# Po1 and M.F
+crime_lm4 <- lm(Crime ~ Po1 + M.F, data = uscrime)
+summary(crime_lm4)
+```
+
+```{r}
+# Po1 and wealth
+crime_lm5 <- lm(Crime ~ Po1 + Wealth, data = uscrime)
+summary(crime_lm5)
+```
+
+```{r}
+# Po1, M.F, and Wealth
+crime_lm6 <- lm(Crime ~ Po1 + M.F + Wealth, data = uscrime)
+summary(crime_lm6)
+```
+
+Looking at the summary statistics from all the trained models, I am going to select model 6 as the winner. Even though it did not achieve the best R-Squared stat of the models, it is simpler (only 3 predictors), and each predictor is significant. 
+
+The final step of the assignment was to make a prediction based on a fictional city. Let's take a look!
+
+```{r}
+# Data points for new city pulled from HW guidelines
+new_city <- data.frame(Po1 = 12.0, M.F = 94.0, Wealth = 3200)
+new_city_crime <- predict(crime_lm6, new_city)
+print(new_city_crime)
+```
+
+Our hypothetical city is predicted to have 1503 crimes. This puts the city well into the top quartile when you compare it to the box plot of our crime data.
+
+```{r}
+boxplot(uscrime$Crime)
+```
