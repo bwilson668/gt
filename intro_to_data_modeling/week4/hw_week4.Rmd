@@ -2,7 +2,9 @@
 title: "hw_week4"
 author: "Ben Wilson"
 date: "June 8, 2019"
-output: html_document
+output:
+  word_document: default
+  html_document: default
 ---
 
 # Week 3 Homework
@@ -13,11 +15,12 @@ output: html_document
 
 The packages included to run this notebook are:
 
-- tidyverse
-- tree
-- rpart
-- randomForest
-- caret
+- tidyverse - *for convenience*
+- tree - *for the regression tree*
+- rpart - *an alternative for the regression tree*
+- randomForest - *for the random forest*
+- caret - *for the confusion matrix*
+- ROCR - *for the ROC curve*
 
 ```{r setup2, include=FALSE}
 library(tidyverse)
@@ -140,7 +143,60 @@ glimpse(uscrime_ct)
 
 **In R, you can use the `tree` package or the `rpart` package, and the `randomForest` package. For each model, describe one or two qualitative takeaways you get from analyzing the results (i.e., don't just stop when you have a good model, but interpret it too).**
 
+We will start with building out a single tree.
 
+```{r}
+crime_tree <- tree(
+  Crime ~ .,
+  data = uscrime
+)
+plot(crime_tree)
+text(crime_tree, all = TRUE, pretty = 0)
+```
+
+This plot shows us the decision points in the tree.
+
+Now that we understand how to interpret a single tree, let's grow a full forest.
+
+```{r}
+set.seed(1234) # Allows you to replicate results for 'Random' Forest
+crime_rf <- randomForest(
+  Crime ~ .,          # Formula
+  data = uscrime,     # Source data set
+  ntree = 250,        # How many trees we grow
+  nodesize = 5,       # How tall we allow the tree to grow
+  replace = TRUE,     # If we allow the sampling of the same data point for a single tree
+  importance = TRUE,  # Performance details
+  localImp = TRUE     # Performance details
+)
+```
+
+In our model we created 250 different trees. These trees were all brought back together in an ensemble. A side effect of the ensemble is that we lose some interpretability of the model. We cannot point to a particular tree and a particular branch to say "this is why the prediction provided value *x*."
+
+There model does return a few stats to help interpret its peformance. 
+
+```{r}
+# Mean-Squared Error of the model
+mean(crime_rf$mse)
+```
+
+```{r}
+# R Squared score - % of variance explained by model
+mean(crime_rf$rsq)
+```
+
+```{r}
+crime_rf$importance
+```
+
+```{r}
+# Display the standard errors
+crime_rf$importanceSD
+```
+
+Wrapping up, between the 4 models we have trained *(Linear Regression, PCA Linear Regression, Tree Regression, and Random Forest Regression)* the PCA Linear Regression model performed the best.
+
+However, I may select the Tree Regression to brief to leadership. The decision tree structure is easy for non-analytical teammates to follow. It also becomes actionable. The team can strategically target a node on the tree. 
 
 ## 10.2 
 
