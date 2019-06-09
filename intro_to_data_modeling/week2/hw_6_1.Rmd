@@ -1,0 +1,28 @@
+---
+title: "HW 6.1"
+author: "Ben Wilson"
+date: "5/26/2019"
+output:
+  word_document: default
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Question
+
+Describe a situation or problem from your job, everyday life, current events, etc., for which a Change Detection model would be appropriate. Applying the CUSUM technique, how would you choose the critical value and the threshold?
+
+# Response
+
+I have taken a personal interest in time-series data and stock market trading. Change Detection modeling is very useful in trading. Being quick to notice a stock going up or down can give you a buy or sell signal. 
+
+You need to be careful when you buy and sell. Too quick and you will pay more in taxes from selling frequently. Too slow and you will miss out on stock growth or lose all your margin from the stock falling.
+
+There are also adversarial techniques, like the "pump and dump", where a trader will pump in a large sum of money to drive up the value. Other traders see the upward trend and join in on the hot item continuing the drive upward. Then the initial trader pulls out, causing a minor collapse in the stock's value.  
+Being slower to react in this case would be a good thing.
+
+Choosing the C & T for the CUSUM method would be dependent on the traders risk tolerance and remaining capital. I would approach it conservatively, being a little slower to react, and then dialing in the proper values from there. 
