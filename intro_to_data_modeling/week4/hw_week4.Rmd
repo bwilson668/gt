@@ -1,0 +1,252 @@
+---
+title: "hw_week4"
+author: "Ben Wilson"
+date: "June 8, 2019"
+output: html_document
+---
+
+# Week 3 Homework
+
+*Advanced Data Prep and Regression*
+
+## Setup
+
+The packages included to run this notebook are:
+
+- tidyverse
+- tree
+- rpart
+- randomForest
+- caret
+
+```{r setup2, include=FALSE}
+library(tidyverse)
+library(tree)
+library(rpart)
+library(randomForest)
+library(caret)
+library(ROCR)
+```
+
+## 9.1 
+
+**Using the same crime data set `uscrime.txt` as in Question 8.2, apply Principal Component Analysis and then create a regression model using the first few principal components. Specify your new model in terms of the original variables (not the principal components), and compare its quailty to that of your solution to Question 8.2.**
+
+```{r}
+uscrime <- read.delim("data/uscrime.txt")
+```
+
+First, let's pull in the answer from last week. I tested out several different models and found `Po1 + M.F + Wealth` were the 3 best features for the model.
+
+```{r}
+# Po1, M.F, and Wealth
+crime_lm6 <- lm(Crime ~ Po1 + M.F + Wealth, data = uscrime)
+```
+
+Now, let's compress the target variables.
+
+```{r}
+# Divide data into predictors and target variable
+uscrime_p <- select(uscrime, -Crime)
+uscrime_t <- select(uscrime, Crime)
+```
+
+Compress those predictors!  
+*Don't forget to scale and center.*
+
+```{r}
+uscrime_pca <- prcomp(uscrime_p, center = TRUE, scale = TRUE)
+uscrime_pca
+```
+
+The `prcomp` function returns us 15 principal components for our 15 predictor variables. If we keep all 15, then we are not accomplishing our goal of compressing the data while still explaining the variance.
+
+Let's plot out the cumulative variance explained by adding an additional principal component. To set a goal before we run this, let's say we want the principal components to account for at least 90% of the variance in our data.
+
+```{r}
+plot(
+  cumsum(uscrime_pca$sdev^2/sum(uscrime_pca$sdev^2)), 
+  ylab = "% of Variance Explained", 
+  xlab = "# of Components"
+)
+```
+
+Eyeballing the cumulative explained variance plot shows us that we can use the first **6** components to explain 90% of the variability in our data.
+
+
+```{r}
+keep_pcs <- 6
+
+# uscrime_c for compressed
+uscrime_c <- uscrime_pca$x[,1:keep_pcs] %>% 
+  cbind(uscrime_t)
+
+# train model on compressed data
+crime_lm_pc <- lm(Crime ~ ., data = uscrime_c)
+```
+
+```{r}
+# PCA Model
+summary(crime_lm_pc)
+```
+
+```{r}
+# Old Model
+summary(crime_lm6)
+```
+
+The PCA model outperformed the original model across all summary statistics.
+
+The features were more significant.  
+The standard error decreased.  
+The p-value decreased.
+
+These are all signs that the PCA model is a more accurate model.
+
+However, we lost some interperability with all the scaling, centering, and compressing. Let's translate the data back to it's source format.
+
+```{r}
+# ct for Compressed translation
+# Step 1 - Rotate the data back to their original number lines. 
+# This changes it from Principal Components to the original column names, like "Wealth" and "Po1".
+uscrime_ct <- uscrime_pca$x[,1:keep_pcs] %*% t(uscrime_pca$rotation[,1:keep_pcs])
+
+# Step 2 - Put the data back on it's original scale.
+uscrime_ct <- scale(
+  uscrime_ct, 
+  center = FALSE,
+  scale = 1 / uscrime_pca$scale
+)
+
+# Step 3 - Recenter the data.
+uscrime_ct <- scale(
+  uscrime_ct, 
+  center = -1 * uscrime_pca$center,
+  scale = FALSE
+)
+
+# Step 4 - Cast the data back to a data frame.
+uscrime_ct <- as.data.frame(uscrime_ct)
+
+glimpse(uscrime_ct)
+```
+
+## 10.1 
+
+**Using the same crime data set `uscrime.txt` as in Question 8.2 and 9.1, find the best model you can using**
+
+1. **a regression tree model**
+2. **a random forest model**
+
+**In R, you can use the `tree` package or the `rpart` package, and the `randomForest` package. For each model, describe one or two qualitative takeaways you get from analyzing the results (i.e., don't just stop when you have a good model, but interpret it too).**
+
+
+
+## 10.2 
+
+**Describe a situation or problem from your job, everyday life, current events, etc., for which a logistic regression model would be appropriate. List some (up to 5) predictors that you might use.**
+
+There is a site called [Numerai](https://numer.ai) that blends the ideas of high frequency traders and Kaggle data competitions. Each week a new round opens up and thousands of data scientists/quants train models to submit. The source data is transformed in such a way that the modeler cannot know what signals or stocks they are modeling to trade.
+
+Numerai gets lots of models that they can create an ensemable out of to buy and trade these stocks. Then you, as the modeler, get a kick back for how well your model performs and the uniqueness of the model.
+
+Logistic regression works well in this scenario because they want a binary decision - Buy or Sell. However, they ask that you provide the results in a confidence percentage instead. This way they can set their own threshold for when to trust your model.
+
+Due to Numerai cleaning, prepping, and obscuring the source the feature names are not so exciting. The data set includes predictors like:
+
+- Feature_1
+- Feature_2
+- ...
+- Feature_50
+
+Either way, it's a fun clean place to practice your modelling skills and possibly earn some change on the side!
+
+## 10.3
+
+1. **Using the GermanCredit data set `germancredit.txt` from ..., use logisitc regression to find a good predictive model for whether credit applicants are good credit risks or not. Show your model (factors used and their coefficients), the software output, and the quality of fit. You can use the `glm` function in R.**
+2. **Because the model gives a result between 0 and 1, it requires a threshold probablity to separate between "good" and "bad" answers. In this data set, they estimate that incorrectly identifying a bad customer as good, is 5 times worse than incorrectly classifying a good customer as bad. Determine a good threshold probability based on your model.**
+
+```{r}
+gercredit <- read.table("data/germancredit.txt")
+glimpse(gercredit)
+```
+
+`V21` is our target variable, but the logisitic regression models need the target variable to be 0 or 1, not 1 or 2.
+
+In the dataset documentation 1 is considered a good loan and 2 is considered a bad loan. Let's recode 2 to 0 for our model.
+
+```{r}
+gercredit <- mutate(gercredit, V21 = ifelse(V21 == 2, 0, 1))
+```
+---
+TODO: Plot all the pairs for a scatter plot like in HW 3.
+TODO: Be smarter about selecting a few models.
+TODO: Plot confusion matrix and set different thresholds after training a model.
+---
+
+```{r}
+credit_glm_all <- glm(
+  V21 ~ ., 
+  family = binomial(link = "logit"), 
+  data = gercredit
+)
+summary(credit_glm_all)
+```
+
+In the summary of the model, we can see the coefficients used with all the features, their standard error, and the significance that they contribute to the model.  
+
+Looking closely at the features you may notice that the categorical features have been expanded into each of their options. `V1` became `V1A12`, `V1A13`, and `V1A14`. Whereas `V2` remained `V2` because it is a numerical feature. 
+
+This idea of breaking a categorical feature into one column for each category and labeling it as a binary *yes* or *no* is known as **one-hot encoding**. 
+
+The summary also provides the AIC score, which is a measure of the models complexity. In this case, the AIC is high, which is to be expected since we threw the EVERY feature at it.
+
+Now that we
+have our model trained, we can feed the data through it to get predictions.
+
+```{r}
+credit_p_all <- predict(credit_glm_all, gercredit, "response")
+head(credit_p_all)
+```
+
+The prediction returns the model's confidence in a positive classification. With these percentages we can set a threshold for when we will accept a positive classification. 
+
+Since false positives *(Type 1 Error)* are 5x as costly as a false negative *(Type 2 Error)*, we will want to set a higher threshold. 
+
+A confusion matrix is a good tool to check how many type 1 vs. type 2 errors you are making.
+
+```{r}
+# You must be 70% sure this is a good idea before we will accept it!
+threshold <- 0.7
+
+# This was bit of an odd step. I was not expecting to have to convert these to a factor.
+# I also needed to install the `e1071` package before the confusion matrix would work.
+pred_factor <- factor(as.numeric(credit_p_all > threshold))
+target_factor <- factor(gercredit$V21)
+
+confusionMatrix(
+  data = pred_factor,
+  reference = target_factor
+)
+```
+
+The confusion matrix just gives us a snapshot of setting a single threshold. What if we want to look at all the possible thresholds and their true positive / false positive tradeoff?
+
+Well for that, we can use a Reciever Operating Characteristic or ROC curve.
+
+```{r}
+credit_pred_all <- prediction(credit_p_all, gercredit$V21)
+credit_perf_all <- performance(credit_pred_all, "tpr", "fpr")
+plot(credit_perf_all, colorize = TRUE)
+```
+
+I found the color very helpful on this plot for highlighting the ideal threshold.
+
+At the extremes, a threshold of 1, meaning the model needs to be **100%** certain that this is really a good idea, we get 0 positives.  
+A threshold of 0, meaning we let every data point come through as a positive "good idea" we are right about 100% of the true positives, but we also have 100% of the true negatives. 
+
+The sweet spot for our case looks to be around the orangish-yellow area. ~.8 threshold. This will let us capture 60% of the proverbial good eggs and only let ~15% of bad eggs through. 
+
+After talking with management, they may still want to increase the threshold. You will be turning away a lot of good customers, but you won't have as much risk with a bad one.
+
+*I could go on and refine the model to get more Area Under the Curve (AUC), but I believe I've demonstrated my ability to refine a model in the questions above and that I have met the requirements for this question. The same tactics to optimize a regression model apply to a classification model.*
