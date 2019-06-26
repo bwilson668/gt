@@ -2,7 +2,9 @@
 title: "hw_week6"
 author: "Ben Wilson"
 date: "June 24, 2019"
-output: html_document
+output:
+  word_document: default
+  html_document: default
 ---
 
 # Week 6 Homework
@@ -21,7 +23,7 @@ library(tidyverse)
 library(mice)
 ```
 
-For exercise 13.2, I used SimPy and complimentary Python libraries to complete the simulation.
+For exercise 13.2, I used SimPy, NumPy, and Itertools to complete the simulation in python.
 
 ## 13.2
 
@@ -33,7 +35,9 @@ For exercise 13.2, I used SimPy and complimentary Python libraries to complete t
 
 *Use Python with Simpy (my choice) to build a simulation of the system, and then vary the number of boarding-pass checkers and personal-check queues to determine how many are needed to keep average wait times below 15 minutes.*
 
+In my simulation I found that 4 ID agents and 5 Personal Check agents worked best. They were able to get through 2,931 passengers for 600 minutes of simulation (10 hour workday).
 
+Reference the `airline-security-queue-sim.py` for more details.
 
 ## 14.1
 
